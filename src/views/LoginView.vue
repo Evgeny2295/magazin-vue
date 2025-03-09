@@ -9,8 +9,9 @@
   <div class="container py-3">
     <div class="row">
       <div class="col-lg-12 category-content">
-        <h2 class="errors"></h2>
-        <h1 class="title section-title"></h1>
+
+        <h1 class="title section-title text-center">Вход в личный кабинет</h1>
+        <h2 class="text-center alert-danger">{{error}}</h2>
         <form class="row g-3" method="post">
           <div class="col-md-6 offset-md-3">
             <div class="form-floating mb-3" >
@@ -38,23 +39,26 @@
 import {onMounted,ref} from "vue";
 import axios from "axios";
 import {router} from "@/router/router.js";
+import {addStyle} from "@/js/configStyle.js";
 
 const email = ref('')
 const password = ref('')
+const error = ref('')
 
 const login = async ()=> {
   try{
     const {data} = await axios.post('http://127.0.0.1:8881/api/auth/login',{email:email.value,password:password.value})
     localStorage.access_token = data.access_token
+
     router.push({name:'Personal'})
   }catch(e){
-    console.log(e)
+
+    error.value = 'Пользователь с таким именем или паролем не найден'
   }
 }
 
 onMounted(async()=>{
-  document.querySelector('.header').classList.add("header-products")
-  document.querySelector('.header__btn').classList.add('hidden')
+  addStyle()
 })
 
 </script>

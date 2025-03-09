@@ -37,11 +37,11 @@
 <script setup>
 
 import ProductsComponent from "@/components/product/ProductsComponent.vue";
-import SideBarComponent from "@/components/sidebar/SideBarComponent.vue";
 
 
 import api from "@/api.js";
 import {onMounted, ref, watch} from "vue";
+import {addStyle} from "@/js/configStyle.js";
 
 const emit = defineEmits(['changeLike','addToCart','removeFromCart'])
 
@@ -65,8 +65,7 @@ const changeLike = async (id)=>{
 }
 
 onMounted(async ()=>{
-  document.querySelector('.header').classList.add("header-products")
-  document.querySelector('.header__btn').classList.add('hidden')
+  addStyle()
 
   await getLikedProducts()
 

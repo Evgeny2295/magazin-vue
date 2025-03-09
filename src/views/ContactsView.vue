@@ -14,10 +14,10 @@
 
 <script setup>
 import {onMounted} from "vue";
+import {addStyle} from "@/js/configStyle.js";
 
 onMounted(async ()=>{
-  document.querySelector('.header').classList.add("header-products")
-  document.querySelector('.header__btn').classList.add('hidden')
+ addStyle()
 
 })
 

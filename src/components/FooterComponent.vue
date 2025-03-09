@@ -17,10 +17,10 @@
             <tr>
               <td>8(812)123-45-67</td>
             </tr>
-            <tr>
-              <td><img src="" alt=""></td>
-              <td><img src="" alt=""></td>
-              <td><img src="" alt=""></td>
+            <tr class="d-flex gap-3">
+              <td><img src="@/assets/images/vk.png" alt=""></td>
+              <td><img src="@/assets/images/facebook.png" alt=""></td>
+              <td><img src="@/assets/images/youtube.png" alt=""></td>
             </tr>
           </tbody>
         </table>

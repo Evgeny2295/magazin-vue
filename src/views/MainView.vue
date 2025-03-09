@@ -4,11 +4,11 @@
     <section class="main-quote">
       <div class="container">
         <div class="main-quote__block">
-          <h2 class="title main-quote__title"></h2>
+          <h2 class="title main-quote__title">Лучший вкус, это вкус долголетнего вина</h2>
           <span class="main-quote__line"></span>
           <p class="main-quote__text"></p>
           <div class="main-quote__img">
-            <img src="" class="main-quote__image" alt="glass">
+            <img src="@/assets/images/image.png" class="main-quote__image" alt="glass">
           </div>
         </div>
       </div>
@@ -46,14 +46,14 @@
           </div>
           <div class="new-collections__content-images">
             <div class="new-collections__main-img">
-              <img  src="" alt="Бокал">
+              <img src="@/assets/images/main.jpeg" alt="Бокал">
             </div>
             <div class="new-collections__images">
               <div class="new-collections__img">
-                <img src=""  alt="Бокалы">
+                <img src="@/assets/images/img_1.jpeg" alt="Бокалы">
               </div>
               <div class="new-collections__img">
-                <img src="" alt="Бокалы">
+                <img src="@/assets/images/img_2.jpeg" alt="Бокалы">
               </div>
             </div>
           </div>
@@ -68,10 +68,10 @@
 <script setup>
 
 import {onMounted} from "vue";
+import {removeStyle} from "@/js/configStyle.js";
 
 onMounted(()=>{
-  document.querySelector('.header').classList.remove("header-products")
-  document.querySelector('.header__btn').classList.remove('hidden')
+  removeStyle()
 })
 
 </script>

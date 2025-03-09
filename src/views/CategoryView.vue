@@ -29,7 +29,7 @@
                 @add-to-cart = "(data)=>emit('addToCart',data)"
                 @remove-from-cart = "(product)=>emit('removeFromCart',product)"
               />
-              <div class="products__pagination mt-3">
+              <div v-if="pagination.next_page_url" class="products__pagination mt-3">
                 <nav aria-label="...">
                   <ul class="pagination">
                     <li v-if="pagination.current_page !== 1" class="page-item">
@@ -67,15 +67,16 @@ defineProps({
 })
 const emit = defineEmits(['changeLike','addToCart','removeFromCart','likedProducts'])
 
-import {inject, onMounted, reactive, ref, watch} from "vue";
+import {inject, onMounted, onUpdated, reactive, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import axios from "axios";
 import store from "@/store.js";
 import api from "@/api.js";
+import {addStyle} from "@/js/configStyle.js";
 
 const products = ref([])
 const route = useRoute()
-const id = route.params.id
+const id = ref()
 const cart = ref([])
 const qty = ref(1)
 
@@ -84,6 +85,7 @@ const page = ref(1)
 const likedProducts = ref([])
 
 const getProducts = async (quickPage = null)=>{
+  await getLikedProducts()
 
   if(quickPage !== null){
     localStorage.setItem('page',quickPage)
@@ -91,8 +93,7 @@ const getProducts = async (quickPage = null)=>{
   if(localStorage.getItem('page') != null){
     page.value = localStorage.getItem('page');
   }
-
-  const {data} = await axios.get(`http://localhost:8881/api/categories/${id}/products`,{
+  const {data} = await axios.get(`http://localhost:8881/api/categories/${id.value}/products`,{
     params:{page:page.value}
   })
 
@@ -101,15 +102,17 @@ const getProducts = async (quickPage = null)=>{
   pagination.value = data
 
   if(likedProducts.value){
-
     products.value = products.value.map((product)=>({
       ...product,
       isFavorite: likedProducts.value.some((prod) => prod.id === product.id)
     }))
   }
+
 }
+
 const getLikedProducts = async ()=>{
   await store.dispatch('getLikedProducts').then((data)=>{
+
     likedProducts.value = data
   })
 }
@@ -134,12 +137,11 @@ const onChangeSelect = (event)=>{
     }
 }
 
-onMounted(()=>{
+onMounted(async ()=>{
+  id.value = route.params.id
+  await addStyle()
 
-  document.querySelector('.header').classList.add("header-products")
-  document.querySelector('.header__btn').classList.add('hidden')
-
-  getProducts()
+  await getProducts()
 
 
   const localCart = localStorage.getItem('cart')
@@ -158,7 +160,10 @@ onMounted(()=>{
 watch(cart,()=>{
   localStorage.setItem('cart',JSON.stringify(cart.value))
 },{deep:true})
-
+watch(route,async ()=>{
+  id.value = route.params.id
+  await getProducts()
+})
 const categories = inject('categories')
 const user = inject('user')
 

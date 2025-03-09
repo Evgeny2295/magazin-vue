@@ -76,9 +76,11 @@ const getCategories =async ()=>{
 }
 
 const getPersonal = async ()=>{
-  const {data} = await api.value.get('http://127.0.0.1:8881/api/auth/personal')
-
-  if(user.value) user.value = data
+  if(!user.value) {
+    store.dispatch('getUser').then((data)=>{
+      user.value = data
+    })
+  }
 }
 
 const getAccessToken = async ()=> {
@@ -105,6 +107,7 @@ const searchShow = computed(() => {
 })
 
 const addToCart = (data)=>{
+
   const product = data[0]
   product.qty =data[1]
   cart.value.push(product)
@@ -112,12 +115,13 @@ const addToCart = (data)=>{
 }
 
 const removeFromCart = (product)=>{
-  cart.value = cart.value.filter(item => item.id !== product.id);
+  cart.value = cart.value.filter(item => item.id == product.id);
   product.isAdded = false
 }
+
 const getLikedProducts = async ()=>{
   store.dispatch('getLikedProducts').then((data)=>{
-    likedProducts.value = data
+    likedProducts.value = data.data
   })
 }
 
@@ -131,7 +135,6 @@ onMounted(()=>{
     getLikedProducts()
   }
   getCategories()
-
 
 })
 

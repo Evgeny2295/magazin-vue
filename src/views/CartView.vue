@@ -23,32 +23,31 @@
                   <tr v-for="product in products">
                     <td class="cart__table-row">{{product.title}}</td>
                     <td class="cart__table-row">{{product.price}} Р</td>
-                    <td class="cart__table-row"><input type="number" v-model="product.qty" value="1" class="w-25"></td>
-                    <td class="cart__table-row"><button @click="removeFromCart(product)" type="button" class="w-25 align">Удалить</button></td>
+                    <td class="cart__table-row"><input type="number" v-model="product.qty" value="1" class="w-25 text-center"></td>
+                    <td class="cart__table-row"><button @click="removeFromCart(product)" type="button" class="w-75">Удалить</button></td>
                   </tr>
                   </tbody>
                 </table>
               </div>
               <div class="cart__order cart__order--white">
-
-                <button @click="createOrder()" v-if="Object.keys(user).length>0" class="btn btn-success btn__order">Оформить</button>
+                <button @click="createOrder()" v-if="user" class="btn btn-success btn__order">Оформить</button>
                 <div v-else>
-                  <button class="btn btn-success btn__order">Войти</button>
-                  <button class="btn btn-success btn__order">Зарегистрироваться</button>
+                  <button type="button" class="btn btn-success btn__order"><router-link :to="{name:'Login'}">Войти</router-link></button>
+                  <button type="button" class="btn btn-success btn__order"><router-link :to="{name:'Signup'}">Зарегистрироваться</router-link></button>
                 </div>
                 <table class="table">
-                  <tr>
+                  <tr class="d-flex gap-5">
                     <td>Ваша корзина</td>
                     <td>{{ count }} товара (-ов)</td>
                   </tr>
-                  <tr>
+                  <tr class="d-flex gap-5">
                     <td>Общая стоимость</td>
                     <td>{{sum}} Р</td>
                   </tr>
                 </table>
               </div>
             </div>
-            <div class="cart__empty"v-else>В корзину еще ничего не добавлено</div>
+            <div class="cart__empty" v-else>В корзину еще ничего не добавлено</div>
           </div>
         </div>
       </section>
@@ -60,13 +59,16 @@
 
 import {onMounted, ref, inject, onUpdated,watch} from "vue";
 import api from "@/api.js";
+import {addStyle} from "@/js/configStyle.js";
+import store from "@/store.js";
+import {router} from "@/router/router.js";
 
 const products = ref([])
 const orderProducts = ref([])
 const load = ref(true)
 const sum = ref(0)
 const count = ref(0)
-
+const user = ref()
 const removeFromCart = (product)=>{
   const localCart = JSON.parse(localStorage.getItem('cart'))
   localCart.splice(localCart.indexOf(product),1)
@@ -84,13 +86,28 @@ const createOrder = ()=>{
   api.value.post("http://127.0.0.1:8881/api/auth/cart",{
     products:orderProducts.value
   })
+
   localStorage.removeItem('cart')
   products.value = []
 }
 
+const getPersonal = async ()=>{
+  if(!user.value) {
+
+    await store.dispatch('getUser').then((data)=>{
+      if(!data){
+        localStorage.removeItem('access_token')
+        router.push({name:'Login'})
+      }
+      user.value = data
+
+    })
+  }
+}
+
 onMounted(async ()=>{
-  document.querySelector('.header').classList.add("header-products")
-  document.querySelector('.header__btn').classList.add('hidden')
+  await addStyle()
+  await getPersonal()
 
   const localCart = localStorage.getItem('cart')
   products.value = localCart ? JSON.parse(localCart) : []
@@ -109,8 +126,6 @@ watch(products,()=>{
   products.value.map(product=>{count.value += product.qty})
   localStorage.setItem('cart',JSON.stringify(products.value))
 },{deep:true})
-
-const user = inject('user')
 
 </script>
 

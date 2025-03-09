@@ -65,13 +65,16 @@
 import {inject, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import api from "@/api.js";
+import store from "@/store.js";
+import {addStyle} from "@/js/configStyle.js";
+import {router} from "@/router/router.js";
 
 const route = useRoute()
 const updation = ref(false)
 const message = ref('')
 const email = ref('')
 const name=ref('')
-
+const user=ref('')
 
 const updateUser = async()=>{
   updation.value = true
@@ -89,18 +92,32 @@ const storeUser = async()=>{
   }
 }
 
+const getPersonal = async ()=>{
+
+  if(!user.value) {
+    await store.dispatch('getUser').then((data)=>{
+      if(!data){
+        localStorage.removeItem('access_token')
+        router.push({name:'Login'})
+      }
+
+      user.value = data
+    })
+  }
+}
+
 onMounted(async ()=>{
 
-  document.querySelector('.header').classList.add("header-products")
-  document.querySelector('.header__btn').classList.add('hidden')
+ await addStyle()
 
+ await getPersonal()
 })
 
 watch(route,()=>{
   message.value=''
 })
 
-const user = inject('user')
+
 </script>
 
 <style scoped>

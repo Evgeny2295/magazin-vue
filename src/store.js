@@ -1,6 +1,7 @@
 import {createStore} from 'vuex'
 import axios from "axios";
 import api from "@/api.js";
+import {router} from "@/router/router.js";
 
 const store = createStore({
     state:{
@@ -40,8 +41,12 @@ const store = createStore({
             commit('CHANGE_CATALOG_CLOSE')
         },
         async getLikedProducts(){
-            const {data}= await api.value.get('http://127.0.0.1:8881/api/auth/wishlist')
-            return data
+            const data = await api.value.get('http://127.0.0.1:8881/api/auth/wishlist')
+            if(data.data) return data.data
+        },
+        async getUser(){
+            const data = await api.value.get('http://127.0.0.1:8881/api/auth/personal')
+            if(data) return data.data
         }
 
     },

@@ -3,15 +3,14 @@
     <div class="main__goods">
       <div class="main__product">
         <router-link :to="{name:'Product',params:{slug:product.slug}}" class="main__product-link">
-          <img src="" class="main__product-img" alt="">
+          <img :src="`/src/assets/${product.img}`" class="main__product-img" alt="">
           <div class="main__product-wishlist">
-
             <a @click.prevent="changeLike()" class="main__product-wishlist-add-link"><span>{{product.countLikes}}</span>
               <i v-if="product.isFavorite" class="fas fa-heart"></i>
               <i v-else class="far fa-heart"></i>
             </a>
           </div>
-          <h2 class="main__product-title"></h2>
+          <h2 class="main__product-title">{{product.title}}</h2>
         </router-link>
         <div class="main__product-description">
           <p class="main__product-description-text"><span class="main__product-text main__product-text--bold">Градусы: </span>{{product.strength}} %</p>
@@ -37,7 +36,7 @@
             <button v-if="!product.isAdded" @click="$emit('addToCart',qty)" type="button" class="main__product-addtocart-link" data-id="">
               В корзину <i class="fas fa-cart-plus"></i>
             </button>
-            <button v-else @click="removeFromCart" type="button" class="main__product-addtocart-link" data-id="">
+            <button v-else @click="removeFromCart()" type="button" class="main__product-addtocart-link" data-id="">
               Из корзины <i class="fas fa-cart-plus"></i>
             </button>
           </div>

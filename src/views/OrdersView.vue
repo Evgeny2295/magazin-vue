@@ -80,6 +80,7 @@
 
 import {onMounted, ref} from "vue";
 import api from "@/api.js";
+import {addStyle} from "@/js/configStyle.js";
 
 const orders = ref([])
 const orderShow = ref(false)
@@ -87,6 +88,7 @@ const orderShow = ref(false)
 const getOrders = async ()=>{
   const {data} =  await api.value.get("http://127.0.0.1:8881/api/auth/orders")
   orders.value = data
+
 }
 
 const showOrder = (id)=>{
@@ -100,8 +102,7 @@ const showOrder = (id)=>{
 }
 
 onMounted(()=>{
-  document.querySelector('.header').classList.add("header-products")
-  document.querySelector('.header__btn').classList.add('hidden')
+  addStyle()
 
   getOrders()
 })
