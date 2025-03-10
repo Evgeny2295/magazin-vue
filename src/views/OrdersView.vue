@@ -88,7 +88,6 @@ const orderShow = ref(false)
 const getOrders = async ()=>{
   const {data} =  await api.value.get("http://127.0.0.1:8881/api/auth/orders")
   orders.value = data
-
 }
 
 const showOrder = (id)=>{
@@ -103,7 +102,6 @@ const showOrder = (id)=>{
 
 onMounted(()=>{
   addStyle()
-
   getOrders()
 })
 

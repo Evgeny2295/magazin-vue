@@ -17,7 +17,6 @@
     @remove-from-cart="removeFromCart"
     @add-to-cart="addToCart"
     @liked-products = "likedProducts"
-
   />
   <FooterComponent/>
 </template>
@@ -84,12 +83,10 @@ const getPersonal = async ()=>{
 }
 
 const getAccessToken = async ()=> {
-
   if(localStorage.access_token == 'undefined'){
     localStorage.removeItem('access_token')
   }
   accessToken.value = localStorage.access_token
-
 }
 
 const logout = async ()=>{
@@ -107,7 +104,6 @@ const searchShow = computed(() => {
 })
 
 const addToCart = (data)=>{
-
   const product = data[0]
   product.qty =data[1]
   cart.value.push(product)
@@ -134,7 +130,14 @@ onMounted(()=>{
     getPersonal()
     getLikedProducts()
   }
+
   getCategories()
+
+  if(user.length > 0){
+    store.dispatch('TOGGLE_ADMIN_OPEN')
+  }else{
+    store.dispatch('TOGGLE_ADMIN_CLOSE')
+  }
 
 })
 
@@ -153,6 +156,7 @@ watch(route,()=>{
 watch(likedProducts,()=>{
 
 },)
+
 provide('categories',categories)
 provide('products',products)
 provide('user',user)

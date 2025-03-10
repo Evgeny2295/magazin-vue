@@ -75,7 +75,6 @@ const changeLike = async (id)=>{
 
 const getLikedProducts = async ()=>{
   await store.dispatch('getLikedProducts').then((data)=>{
-
     likedProducts.value = data
   })
 }
@@ -128,11 +127,11 @@ const onChangeSelect = (event)=>{
 }
 
 
-onMounted(() => {
+onMounted(async() => {
 
-  addStyle()
+  await addStyle()
 
-  getProducts()
+  await getProducts()
 
   if(products.value.length>0){
     const localCart = localStorage.getItem('cart')

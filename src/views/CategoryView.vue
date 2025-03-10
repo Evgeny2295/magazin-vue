@@ -62,10 +62,6 @@
 
 import ProductsComponent from "@/components/product/ProductsComponent.vue";
 import SideBarComponent from "@/components/sidebar/SideBarComponent.vue";
-defineProps({
-  likedProducts: Array
-})
-const emit = defineEmits(['changeLike','addToCart','removeFromCart','likedProducts'])
 
 import {inject, onMounted, onUpdated, reactive, ref, watch} from "vue";
 import {useRoute} from "vue-router";
@@ -74,12 +70,17 @@ import store from "@/store.js";
 import api from "@/api.js";
 import {addStyle} from "@/js/configStyle.js";
 
+defineProps({
+  likedProducts: Array
+})
+
+const emit = defineEmits(['changeLike','addToCart','removeFromCart','likedProducts'])
+
 const products = ref([])
 const route = useRoute()
 const id = ref()
 const cart = ref([])
 const qty = ref(1)
-
 const pagination = ref([])
 const page = ref(1)
 const likedProducts = ref([])
@@ -107,22 +108,18 @@ const getProducts = async (quickPage = null)=>{
       isFavorite: likedProducts.value.some((prod) => prod.id === product.id)
     }))
   }
-
 }
 
 const getLikedProducts = async ()=>{
   await store.dispatch('getLikedProducts').then((data)=>{
-
     likedProducts.value = data
   })
 }
 
 const changeLike = async (slug)=>{
-
   await api.value.post(`http://127.0.0.1:8881/api/auth/wishlist/${slug}`)
   await getLikedProducts()
   await getProducts();
-
 }
 
 const onChangeSelect = (event)=>{
@@ -139,10 +136,9 @@ const onChangeSelect = (event)=>{
 
 onMounted(async ()=>{
   id.value = route.params.id
+
   await addStyle()
-
   await getProducts()
-
 
   const localCart = localStorage.getItem('cart')
   cart.value = localCart ? JSON.parse(localCart) : []
@@ -164,6 +160,7 @@ watch(route,async ()=>{
   id.value = route.params.id
   await getProducts()
 })
+
 const categories = inject('categories')
 const user = inject('user')
 

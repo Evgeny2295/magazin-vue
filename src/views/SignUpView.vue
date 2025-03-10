@@ -7,10 +7,8 @@
     </nav>
   </div>
   <h2 style="color:#282828"></h2>
-
   <div class="container py-3">
     <div class="row">
-
       <div class="col-lg-12 category-content">
         <h1 class="section-title text-center">Регистрация</h1>
         <form class="row g-3" method="post">
@@ -23,7 +21,6 @@
               <h3 v-for="error in errors.name">{{error}}</h3>
             </div>
           </div>
-
           <div class="col-md-6 offset-md-3">
             <div class="form-floating mb-3">
               <input v-model="email" type="email" name="email" class="form-control" id="email" value="" placeholder="name@example.com">
@@ -62,12 +59,14 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import {router} from "@/router/router.js";
 import {addStyle} from "@/js/configStyle.js";
+import store from "@/store.js";
 
 const name = ref('')
 const email = ref('')
 const password = ref('')
 const password_confirmation = ref('')
 const errors = ref([])
+
 const storeUser = async () => {
   try{
     const {data} = await axios.post('http://localhost:8881/api/users',
@@ -78,12 +77,10 @@ const storeUser = async () => {
         password_confirmation:password_confirmation.value
     })
     if(data.message) error.value = data.message
-
     if(data.access_token){
       localStorage.access_token = data.access_token
       router.push({name:'Personal'})
     }
-
   }catch(error){
       if (error.response.status === 422) {
         console.log(error.response.data.errors);
@@ -96,8 +93,8 @@ const storeUser = async () => {
   }
 }
 onMounted(async()=>{
- addStyle()
-
+ await addStyle()
+ await store.dispatch('TOGGLE_ADMIN_CLOSE')
 })
 
 </script>

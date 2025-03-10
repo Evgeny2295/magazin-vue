@@ -61,7 +61,7 @@ defineEmits(["addToCart"])
 const route = useRoute()
 const cart = ref([])
 const id = route.params.id
-const qty = ref(1)
+let qty = ref(1)
 
 </script>
 

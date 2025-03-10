@@ -69,6 +69,7 @@ const load = ref(true)
 const sum = ref(0)
 const count = ref(0)
 const user = ref()
+
 const removeFromCart = (product)=>{
   const localCart = JSON.parse(localStorage.getItem('cart'))
   localCart.splice(localCart.indexOf(product),1)
@@ -93,14 +94,12 @@ const createOrder = ()=>{
 
 const getPersonal = async ()=>{
   if(!user.value) {
-
     await store.dispatch('getUser').then((data)=>{
       if(!data){
         localStorage.removeItem('access_token')
         router.push({name:'Login'})
       }
       user.value = data
-
     })
   }
 }

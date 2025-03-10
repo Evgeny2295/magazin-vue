@@ -40,6 +40,7 @@ import {onMounted,ref} from "vue";
 import axios from "axios";
 import {router} from "@/router/router.js";
 import {addStyle} from "@/js/configStyle.js";
+import store from "@/store.js";
 
 const email = ref('')
 const password = ref('')
@@ -49,16 +50,15 @@ const login = async ()=> {
   try{
     const {data} = await axios.post('http://127.0.0.1:8881/api/auth/login',{email:email.value,password:password.value})
     localStorage.access_token = data.access_token
-
     router.push({name:'Personal'})
   }catch(e){
-
     error.value = 'Пользователь с таким именем или паролем не найден'
   }
 }
 
-onMounted(async()=>{
-  addStyle()
+onMounted(async ()=>{
+  await addStyle()
+  await store.dispatch('TOGGLE_ADMIN_CLOSE')
 })
 
 </script>

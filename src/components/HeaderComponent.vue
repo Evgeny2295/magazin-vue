@@ -5,7 +5,7 @@
         <router-link @click="change()" to="/"><img style="width: 50px;height: 50px" src="/src/assets/images/logo.png" alt=""></router-link>
         <p class="header__block-address m-0">Томск</p>
 <!--        <div v-if="user && user.role == 1"> Временно открою доступ всем пользователям-->
-        <div v-if="user">
+        <div v-if="store.getters.SEARCH_ADMIN">
           <a href="http://127.0.0.1:8881/admin" style="color: gold">Админ панель(Временно открыл)</a>
         </div>
         <div class="header__block-button">
@@ -89,7 +89,10 @@
 </template>
 
 <script setup>
+import {defineEmits, defineProps, inject, ref} from "vue";
+
 import store from "@/store.js";
+
 let qty = ref(0)
 
 defineProps({
@@ -107,16 +110,12 @@ defineEmits(['showSearch','closeSearch','catalogOpen','onChangeInputSearch','sea
 const user = inject('user')
 
 const change = ()=>{
-
   if(store.getters.SEARCH_ICON_STATE == false){
     store.dispatch('TOGGLE_SEARCH')
   }
-
   store.dispatch('TOGGLE_CATALOG_CLOSE')
 }
 
-import {computed, defineProps, inject, onMounted, ref} from "vue";
-import {defineEmits} from "vue";
 </script>
 
 <style scoped>

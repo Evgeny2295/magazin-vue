@@ -93,28 +93,27 @@ const storeUser = async()=>{
 }
 
 const getPersonal = async ()=>{
-
   if(!user.value) {
     await store.dispatch('getUser').then((data)=>{
       if(!data){
         localStorage.removeItem('access_token')
         router.push({name:'Login'})
       }
-
       user.value = data
     })
   }
 }
 
 onMounted(async ()=>{
-
  await addStyle()
-
  await getPersonal()
+
+ await store.dispatch('TOGGLE_ADMIN_OPEN')
+
 })
 
-watch(route,()=>{
-  message.value=''
+watch(route,async()=>{
+  await getPersonal()
 })
 
 

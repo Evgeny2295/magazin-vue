@@ -52,23 +52,20 @@ const getProduct = async ()=>{
   await getLikedProducts()
 
   product.value = data
-
   if(likedProducts.value) {
     product.value['isFavorite'] = likedProducts.value.some((prod) => prod.id === product.value.id)
   }
 }
 
 const changeLike = async (slug)=>{
-  console.log(slug)
   await api.value.post(`http://127.0.0.1:8881/api/auth/wishlist/${slug}`)
-
-
 }
 
 onMounted(async ()=>{
-  addStyle()
+  await addStyle()
 
   slug.value = route.params.slug
+
   await getProduct()
 })
 </script>

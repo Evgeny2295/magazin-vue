@@ -10,14 +10,6 @@
           <div class="main__content">
             <div>
               <div v-if="products.length>0">
-                <div class="main__sort">
-                  <select @change="onChangeSelect" name="" id="">
-                    <option  value="titleUp">По названию <i class="fa-solid fa-arrow-up"></i></option>
-                    <option  value="titleDown">По названию <i class="fas fa-arrow-down"></i></option>
-                    <option value="priceUp">По цене <i class="fas fa-arrow-up"></i></option>
-                    <option value="priceDown">По цене <i class="fas fa-arrow-down"></i></option>
-                  </select>
-                </div>
                 <ProductsComponent v-if="products.length > 0"
                   :products = "products"
                   @change-like = "changeLike"
@@ -38,7 +30,6 @@
 
 import ProductsComponent from "@/components/product/ProductsComponent.vue";
 
-
 import api from "@/api.js";
 import {onMounted, ref, watch} from "vue";
 import {addStyle} from "@/js/configStyle.js";
@@ -52,20 +43,20 @@ const load = ref(true)
 
 const getLikedProducts = async ()=>{
   const {data} = await api.value.get('http://127.0.0.1:8881/api/auth/wishlist')
-
   products.value = data
   products.value = products.value.map((obj)=>({
     ...obj,
     isFavorite:true
   }))
 }
+
 const changeLike = async (id)=>{
   await api.value.post(`http://127.0.0.1:8881/api/auth/wishlist/${id}`)
   await getLikedProducts();
 }
 
 onMounted(async ()=>{
-  addStyle()
+  await addStyle()
 
   await getLikedProducts()
 
@@ -87,8 +78,6 @@ onMounted(async ()=>{
 const addToCart = async (product)=>{
   product.qty = qty.value
   cart.value.push(product)
-  console.log(cart.value)
-
 }
 
 const removeFromCart = async (product)=>{
@@ -116,6 +105,7 @@ watch(cart,()=>{
     isAdded: cart.value.some((cartItem) => cartItem.id === product.id)
   }))
 },{deep:true})
+
 </script>
 
 <style scoped>

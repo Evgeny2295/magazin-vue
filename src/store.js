@@ -1,7 +1,5 @@
 import {createStore} from 'vuex'
-import axios from "axios";
 import api from "@/api.js";
-import {router} from "@/router/router.js";
 
 const store = createStore({
     state:{
@@ -9,6 +7,7 @@ const store = createStore({
         searchIcon: true,
         favorite: false,
         catalogOpen: false,
+        admin:true
     },
     mutations:{
         CHANGE_SEARCH: (state)=>{
@@ -24,8 +23,12 @@ const store = createStore({
         CHANGE_CATALOG_CLOSE: (state)=>{
             state.catalogOpen = false
         },
-
-
+        CHANGE_ADMIN_CLOSE: (state)=>{
+            state.admin = false
+        },
+        CHANGE_ADMIN_OPEN: (state)=>{
+            state.admin = true
+        }
     },
     actions:{
         TOGGLE_SEARCH({commit}){
@@ -40,9 +43,15 @@ const store = createStore({
         TOGGLE_CATALOG_CLOSE({commit}){
             commit('CHANGE_CATALOG_CLOSE')
         },
+        TOGGLE_ADMIN_CLOSE({commit}){
+            commit('CHANGE_ADMIN_CLOSE')
+        },
+        TOGGLE_ADMIN_OPEN({commit}){
+            commit('CHANGE_ADMIN_OPEN')
+        },
         async getLikedProducts(){
             const data = await api.value.get('http://127.0.0.1:8881/api/auth/wishlist')
-            if(data.data) return data.data
+            if(data) return data.data
         },
         async getUser(){
             const data = await api.value.get('http://127.0.0.1:8881/api/auth/personal')
@@ -62,6 +71,9 @@ const store = createStore({
         },
         SEARCH_CATALOG(state){
             return state.catalogOpen
+        },
+        SEARCH_ADMIN(state){
+            return state.admin
         }
     }
 })
